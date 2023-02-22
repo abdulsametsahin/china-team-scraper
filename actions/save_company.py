@@ -248,7 +248,8 @@ class SaveCompany:
                             'ratio': self.get_num(
                                 shareholder['ratio'].replace('%', '') if shareholder['ratio'] else None),
                             'capital': self.get_money(shareholder['capital']),
-                            'date': None if shareholder['date'] == "-" else shareholder['date'],
+                            'date': None if shareholder['date'] == "-" or len(shareholder['date']) < 1 else shareholder[
+                                'date'],
                         }
 
                         query = """
@@ -282,7 +283,8 @@ class SaveCompany:
                             'registered_capital': self.get_money(investment['registered_capital']),
                             'ratio': self.get_num(
                                 investment['ratio'].replace('%', '') if investment['ratio'] else None),
-                            'date': None if investment['date'] == "-" else investment['date'],
+                            'date': None if investment['date'] == "-" or len(investment['date']) < 1 else investment[
+                                'date'],
                             'status': None if investment['status'] == "-" else investment['status'],
                         }
 
