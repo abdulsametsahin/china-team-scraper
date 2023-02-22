@@ -34,7 +34,7 @@ class SaveCompany:
         print("[x] [SaveCompany] Waiting for messages")
 
         for method_frame, properties, body in channel.consume('company_data'):
-            print(f"[x] [SaveCompany] Received message {method_frame.delivery_tag}")
+            # print(f"[x] [SaveCompany] Received message {method_frame.delivery_tag}")
             self.cnx = pymysql.connect(
                 user=mysql_config['user'], password=mysql_config['password'], host=mysql_config['host'],
                 port=int(mysql_config['port']), database=mysql_config['database'], charset='utf8mb4',
@@ -153,7 +153,7 @@ class SaveCompany:
                     cursor.execute(sql)
                     result = cursor.fetchone()
                     if not result:
-                        print(f"[x] [SaveCompany] Inserting {company['title']} into database")
+                        # print(f"[x] [SaveCompany] Inserting {company['title']} into database")
                         query = """
                             INSERT INTO companies(id, title, phone, email, website, ceo, registered_capital, date_of_establishment, operating_status, registration_number, social_credit_code, organization_code, tax_registration_number, company_type, operating_period, industry, taxpayer_qualification, approval_date, paid_in_capital, staff_size, insured_staff_size, registration_authority, english_name, registered_address, business_scope, updated_at)
                             VALUES (%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s, %s, %s)
@@ -169,7 +169,7 @@ class SaveCompany:
                             company['english_name'], company['registered_address'], company['business_scope'],
                             company['updated_at']))
                     else:
-                        print(f"[x] [SaveCompany] Updating {company['title']} in database")
+                        # print(f"[x] [SaveCompany] Updating {company['title']} in database")
                         query = """
                             UPDATE companies SET title = %s, phone = %s, email = %s, website = %s, ceo = %s, registered_capital = %s, date_of_establishment = %s, operating_status = %s, registration_number = %s, social_credit_code = %s, organization_code = %s, tax_registration_number = %s, company_type = %s, operating_period = %s, industry = %s, taxpayer_qualification = %s, approval_date = %s, paid_in_capital = %s, staff_size = %s, insured_staff_size = %s, registration_authority = %s, english_name = %s, registered_address = %s, business_scope = %s, updated_at = %s
                             WHERE id = %s
