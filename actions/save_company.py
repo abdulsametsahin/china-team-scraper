@@ -114,10 +114,13 @@ class SaveCompany:
     def save(self):
         # update if exists, insert if not
         try:
+            phone = self.company_data['basic_info']['phone']
+            if phone is not None:
+                phone = phone.split(';')[0]
             company = {
                 'id': self.company_data['basic_info']['uuid'],
                 'title': self.company_data['basic_info']['title'],
-                'phone': self.company_data['basic_info']['phone'].split(';')[0],
+                'phone': phone,
                 'email': self.company_data['basic_info']['email'],
                 'website': self.company_data['basic_info']['website'],
                 'ceo': self.company_data['details']['法定代表人'],
