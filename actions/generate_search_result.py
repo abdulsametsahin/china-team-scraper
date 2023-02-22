@@ -61,7 +61,7 @@ class GenerateSearchResult:
             for category_id in range(1, category_count + 1):
                 for eyr_id in range(len(established_year_ranges)):
                     eyr = established_year_ranges[eyr_id].split("-")
-                    url = f"bs{province_id}in{category_id}eyg{eyr[0]}eyl{eyr[1]}"
+                    url = f"bs{province_id}in{category_id}eyg{eyr[0]}eyl{eyr[1]}st1"
                     try:
                         channel.basic_publish(
                             exchange='', routing_key='search_page', body=url,
