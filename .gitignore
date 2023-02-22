@@ -2,3 +2,4 @@ venv
 config.py
 storage/rabbitmq_data
 storage/mysql_data
+__pycache__
