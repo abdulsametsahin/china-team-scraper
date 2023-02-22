@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  rabbitmq:
+    image: rabbitmq:3.9.7-management
+    hostname: rabbitmq-1
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest123
+      RABBITMQ_DEFAULT_PASS: guest123
+    restart: always
+    volumes:
+      - ./storage/rabbitmq_data:/var/lib/rabbitmq
+  mysql5.7:
+    image: mysql:5.7
+    hostname: mysql-1
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: guest123
+      MYSQL_DATABASE: scraper
+    restart: always
+    volumes:
+      - ./storage/mysql_data:/var/lib/mysql
+      - ./storage/scheme.sql:/docker-entrypoint-initdb.d/scraper.sql
+volumes:
+  rabbitmq_data:
+  mysql_data:
