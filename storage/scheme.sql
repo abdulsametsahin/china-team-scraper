@@ -58,7 +58,7 @@ CREATE TABLE `changes` (
   `id` varchar(255) NOT NULL,
   `company` varchar(255) NOT NULL,
   `date` date DEFAULT NULL,
-  `change_type` varchar(50) DEFAULT NULL,
+  `change_type` varchar(120) DEFAULT NULL,
   `before_c` longtext,
   `after_c` longtext,
   PRIMARY KEY (`id`),
