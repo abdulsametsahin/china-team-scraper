@@ -117,7 +117,7 @@ class SaveCompany:
             company = {
                 'id': self.company_data['basic_info']['uuid'],
                 'title': self.company_data['basic_info']['title'],
-                'phone': self.company_data['basic_info']['phone'],
+                'phone': self.company_data['basic_info']['phone'].split(';')[0],
                 'email': self.company_data['basic_info']['email'],
                 'website': self.company_data['basic_info']['website'],
                 'ceo': self.company_data['details']['法定代表人'],
