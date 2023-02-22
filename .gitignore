@@ -2,5 +2,6 @@ venv
 config.py
 storage/rabbitmq_data
 storage/mysql_data
+storage/cookies.txt
 __pycache__
 .idea
