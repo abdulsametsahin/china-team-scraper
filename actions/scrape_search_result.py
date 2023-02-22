@@ -80,7 +80,8 @@ class ScrapeSearchResult:
             result_count = soup.select_one('.select-result span')
             if result_count is None or int(result_count.text.replace('+', '')) == 0:
                 print("[x] [ScrapeSearchResult] No result")
-                return
+                consumer_channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+                continue
 
             page_count = soup.select_one('.page-count')
             if page_count:
