@@ -44,7 +44,7 @@ class ScrapeSearchResult:
             try:
                 credentials = pika.PlainCredentials(rabbitmq_config['user'], rabbitmq_config['password'])
                 parameters = pika.ConnectionParameters(
-                    host=rabbitmq_config['host'], port=rabbitmq_config['port'], credentials=credentials, heartbeat=5)
+                    host=rabbitmq_config['host'], port=rabbitmq_config['port'], credentials=credentials, heartbeat=0)
                 connection = pika.BlockingConnection(parameters)
                 consumer_channel = connection.channel()
                 publisher_channel = connection.channel()
