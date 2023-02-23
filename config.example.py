@@ -1,8 +1,8 @@
 rabbitmq_config = {
     'host': 'localhost',
     'port': 5672,
-    'user': 'guest',
-    'password': 'guest',
+    'user': 'guest123',
+    'password': 'guest123',
 }
 
 mysql_config = {
