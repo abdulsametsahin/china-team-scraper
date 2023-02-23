@@ -70,7 +70,7 @@ DROP TABLE IF EXISTS `companies`;
 CREATE TABLE `companies` (
   `id` varchar(255) NOT NULL,
   `title` varchar(100) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
+  `phone` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `website` varchar(100) DEFAULT NULL,
   `ceo` varchar(100) DEFAULT NULL,
