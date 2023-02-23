@@ -67,8 +67,9 @@ Running the scraper requires both RabbitMQ and MySQL. You can use existing insta
 1. Clone the repository
 2. To run the Docker Compose file, navigate to the root folder of the project in your terminal and use the command `docker-compose up -d`. This will start the RabbitMQ and MySQL services in detached mode.
 3. To configure the scraper, copy the `config.example.py` file to `config.py` using the command `cp config.example.py config.py`. Then, edit the contents of the `config.py` file to reflect your MySQL and RabbitMQ configurations.
-4. If you are not using docker, simply import storage/scheme.sql file into database.
-5. To run the master script, use the command `python master.py` in your terminal. This will initiate the scraping process and coordinate communication between the various workers.
-6. To run the worker script, use the command `python worker.py` in your terminal. This will start the worker process and enable it to receive and process tasks from the RabbitMQ message queue.
+4. Install python dependencies using `pip install -r requirements.txt`
+5. If you are not using docker, simply import storage/scheme.sql file into database.
+6. To run the master script, use the command `python master.py` in your terminal. This will initiate the scraping process and coordinate communication between the various workers.
+7. To run the worker script, use the command `python worker.py` in your terminal. This will start the worker process and enable it to receive and process tasks from the RabbitMQ message queue.
 
 **You can run as many workers as you need to scale the scraper. Once you have initiated the master script, you can run workers from any server and they will be able to communicate with the master process through the RabbitMQ message queue. This enables you to easily scale the scraper to handle larger workloads.**
