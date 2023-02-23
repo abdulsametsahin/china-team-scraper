@@ -4,10 +4,11 @@ import time
 
 import requests
 
-from config import rabbitmq_config
+from config import rabbitmq_config, mysql_config, gongsi_config
 import pika
 from multiprocessing import Process
 from bs4 import BeautifulSoup
+import pymysql
 
 
 class ScrapeSearchResult:
@@ -60,6 +61,9 @@ class ScrapeSearchResult:
 
     def scrape(self, consumer_channel, publisher_channel):
         print("[x] [ScrapeSearchResult] Checking tasks queue")
+        cnx = pymysql.connect(host=mysql_config['host'], user=mysql_config['user'], password=mysql_config['password'],
+                              database=mysql_config['database'], port=mysql_config['port'])
+
         queue_arguments = {'x-queue-mode': 'lazy'}
         consumer_channel.queue_declare(queue='search_page', durable=True, arguments=queue_arguments)
         publisher_queue = publisher_channel.queue_declare(queue='company_link', durable=True, arguments=queue_arguments)
@@ -98,6 +102,15 @@ class ScrapeSearchResult:
             while current_page <= page_count:
                 for company in soup.select('.list-body-title a'):
                     uuid = company['href'].split('/')[-1]
+                    if not gongsi_config['scrape_existing']:
+                        with cnx.cursor() as cursor:
+                            sql = "SELECT `uuid` FROM `company` WHERE `uuid` = %s"
+                            cursor.execute(sql, (uuid,))
+                            result = cursor.fetchone()
+                            if result:
+                                print(f"[x] [ScrapeSearchResult] Company {uuid} already exists, skip")
+                                continue
+
                     publisher_channel.basic_publish(exchange='', routing_key='company_link',
                                                     body=uuid.encode('utf-8'),
                                                     properties=pika.BasicProperties(delivery_mode=2))

@@ -19,4 +19,5 @@ gongsi_config = {
     'enterprise_type_count': 11,
     'phone_number': 'xxx',
     'password': 'xxx',
+    'scrape_existing': False,
 }
