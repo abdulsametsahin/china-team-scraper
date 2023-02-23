@@ -12,7 +12,6 @@ def run():
         Process(target=ScrapeSearchResult),
         Process(target=SaveCompany),
         Process(target=SaveCompany),
-        Process(target=SaveCompany),
     ]
 
     for process in processes:
