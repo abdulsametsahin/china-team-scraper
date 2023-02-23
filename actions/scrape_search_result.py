@@ -107,13 +107,11 @@ class ScrapeSearchResult:
                             sql = "SELECT `id` FROM `companies` WHERE `id` = %s"
                             cursor.execute(sql, (uuid,))
                             result = cursor.fetchone()
-                            if result:
-                                print(f"[x] [ScrapeSearchResult] Company {uuid} already exists, skip")
-                                continue
+                            if not result:
+                                publisher_channel.basic_publish(exchange='', routing_key='company_link',
+                                                                body=uuid.encode('utf-8'),
+                                                                properties=pika.BasicProperties(delivery_mode=2))
 
-                    publisher_channel.basic_publish(exchange='', routing_key='company_link',
-                                                    body=uuid.encode('utf-8'),
-                                                    properties=pika.BasicProperties(delivery_mode=2))
                 current_page += 1
                 response = self.get_with_cookie(f"{url}pg{current_page}")
                 soup = BeautifulSoup(response.text, 'html.parser')
