@@ -24,7 +24,7 @@ def worker():
             publish_queue = publisher_channel.queue_declare(queue='company_data', durable=True,
                                                             arguments=queue_arguments)
 
-            consumer_channel.basic_qos(prefetch_count=2)
+            consumer_channel.basic_qos(prefetch_count=1)
 
             print(f"[x] [ScrapeCompany] Waiting for messages in {consume_queue.method.queue}. To exit press CTRL+C")
             for method_frame, properties, body in consumer_channel.consume(consume_queue.method.queue):
