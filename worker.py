@@ -21,6 +21,8 @@ def worker():
             queue_arguments = {'x-queue-mode': 'lazy', 'x-max-length': 29999}
             consume_queue = consumer_channel.queue_declare(queue='company_link', durable=True,
                                                            arguments=queue_arguments)
+
+            queue_arguments = {'x-queue-mode': 'lazy'}
             publish_queue = publisher_channel.queue_declare(queue='company_data', durable=True,
                                                             arguments=queue_arguments)
 

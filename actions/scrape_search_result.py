@@ -66,6 +66,7 @@ class ScrapeSearchResult:
 
         queue_arguments = {'x-queue-mode': 'lazy', 'x-max-length': 29999}
         consumer_channel.queue_declare(queue='search_page', durable=True, arguments=queue_arguments)
+        queue_arguments = {'x-queue-mode': 'lazy'}
         publisher_queue = publisher_channel.queue_declare(queue='company_link', durable=True, arguments=queue_arguments)
 
         if publisher_queue.method.message_count > self.max_message_count:
