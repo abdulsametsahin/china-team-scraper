@@ -33,6 +33,8 @@ class SaveCompany:
 
         print("[x] [SaveCompany] Waiting for messages")
 
+        channel.basic_qos(prefetch_count=1)
+
         for method_frame, properties, body in channel.consume('company_data'):
             # print(f"[x] [SaveCompany] Received message {method_frame.delivery_tag}")
             self.cnx = pymysql.connect(
