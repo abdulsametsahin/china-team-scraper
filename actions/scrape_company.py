@@ -22,6 +22,9 @@ class ScrapeCompany:
             print(f"Cannot get {url}: {e}")
 
     def scrape(self):
+        if "500" in self.soup.title.text:
+            return 500
+
         basic_info = self.get_basic_info()
         details = self.get_details()
         main_staff = self.get_main_staff()

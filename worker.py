@@ -33,6 +33,9 @@ def worker():
                 print(f"[x] [ScrapeCompany] Scraping {url}")
                 scraper = ScrapeCompany(url)
                 company_data = scraper.scrape()
+                if company_data == 500:
+                    print(f"[x] [ScrapeCompany] 500 error")
+                    company_data = None
 
                 if company_data is not None:
                     publisher_channel.basic_publish(exchange='', routing_key=publish_queue.method.queue,
