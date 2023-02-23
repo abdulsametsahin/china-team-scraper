@@ -11,6 +11,7 @@ def run():
         Process(target=GenerateCookie),
         Process(target=ScrapeSearchResult),
         Process(target=SaveCompany),
+        Process(target=SaveCompany),
     ]
 
     for process in processes:
