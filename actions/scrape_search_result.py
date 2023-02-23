@@ -64,7 +64,7 @@ class ScrapeSearchResult:
         cnx = pymysql.connect(host=mysql_config['host'], user=mysql_config['user'], password=mysql_config['password'],
                               database=mysql_config['database'], port=mysql_config['port'])
 
-        queue_arguments = {'x-queue-mode': 'lazy'}
+        queue_arguments = {'x-queue-mode': 'lazy', 'x-max-length': 29999}
         consumer_channel.queue_declare(queue='search_page', durable=True, arguments=queue_arguments)
         publisher_queue = publisher_channel.queue_declare(queue='company_link', durable=True, arguments=queue_arguments)
 
