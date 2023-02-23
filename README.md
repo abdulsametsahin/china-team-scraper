@@ -1,6 +1,5 @@
 ﻿# Company Scraper 🚀
 
-
 This scraper was built by **China Team** for the Innoscripta Data Competition. Its purpose is to scrape data of Chinese companies from [https://www.gongsi.com.cn](https://gongsi.com.cn/).
 
 ## How it works?
@@ -8,9 +7,6 @@ This scraper was built by **China Team** for the Innoscripta Data Competition. I
 Here is a detailed flow
 
 ![image.png](assets/flow.png)
-
-
-
 
 This scraper utilizes RabbitMQ for communication between the master and workers, enabling it to be highly scalable.
 
@@ -27,13 +23,11 @@ There is a pagiation limit in place for this system. Non-registered users have a
 
 The search page generator is responsible for generating search pages and writing the links to the "**search\_page**" queue, which is then scraped by the "Search page scraper" worker.
 
-
 #### Search page scraper 🔗
 
 This scraper, scrapes though all pages of the search result and writes company links onto "**company_link**" queue so that "Company scraper" can scrape them. We are not able to scrape more than 200 pages for every search result. This is the only scraper which needs authectication. Therefore there is another worker to generate valid cookies.
 
 > Note: To prevent long queue messages and maintain the performance of the scraper, it is designed to stop when the number of unscraped company links in the queue exceeds a certain threshold. Specifically, the scraper will pause when there are more than 30,000 unscraped links in the queue and resume when the number decreases to a safe level. This ensures that the scraper can continue to operate efficiently without overloading the RabbitMQ message queue.
-
 
 #### Company scraper 🏢
 
@@ -51,7 +45,6 @@ The scraper is designed to extract the following types of company data:
 
 To prevent simultaneous queries, the scraper utilizes queues to store data in the database. If a company already exists in the database, it will be updated.
 
-
 ## Installation
 
 Running the scraper requires both RabbitMQ and MySQL. You can use existing installations or run them using Docker and the `docker-compose.yml` file provided in this repository.
@@ -60,7 +53,6 @@ Running the scraper requires both RabbitMQ and MySQL. You can use existing insta
 
 * Pyhton3+ (Tested with 3.11)
 * Docker
-
 
 ## How to run?
 
@@ -73,3 +65,9 @@ Running the scraper requires both RabbitMQ and MySQL. You can use existing insta
 7. To run the worker script, use the command `python worker.py` in your terminal. This will start the worker process and enable it to receive and process tasks from the RabbitMQ message queue.
 
 **You can run as many workers as you need to scale the scraper. Once you have initiated the master script, you can run workers from any server and they will be able to communicate with the master process through the RabbitMQ message queue. This enables you to easily scale the scraper to handle larger workloads.**
+
+
+## Todos
+
+* [ ]  Split pagination links
+* [ ]  Split search results which has more than 200 pages
