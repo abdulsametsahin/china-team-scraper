@@ -121,5 +121,6 @@ class ScrapeSearchResult:
             if publisher_queue.method.message_count > self.max_message_count:
                 print(f"[x] [ScrapeSearchResult] Message count is too large, stop consuming")
                 consumer_channel.stop_consuming()
+                break
 
             consumer_channel.basic_ack(delivery_tag=method_frame.delivery_tag)
