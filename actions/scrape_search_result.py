@@ -104,7 +104,7 @@ class ScrapeSearchResult:
                     uuid = company['href'].split('/')[-1]
                     if not gongsi_config['scrape_existing']:
                         with cnx.cursor() as cursor:
-                            sql = "SELECT `uuid` FROM `company` WHERE `uuid` = %s"
+                            sql = "SELECT `id` FROM `companies` WHERE `id` = %s"
                             cursor.execute(sql, (uuid,))
                             result = cursor.fetchone()
                             if result:
