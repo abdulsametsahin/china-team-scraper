@@ -48,7 +48,6 @@ class ScrapeSearchResult:
                 connection = pika.BlockingConnection(parameters)
                 consumer_channel = connection.channel()
                 publisher_channel = connection.channel()
-                publisher_channel.confirm_delivery()
                 self.scrape(consumer_channel, publisher_channel)
                 consumer_channel.close()
                 publisher_channel.close()
@@ -110,16 +109,22 @@ class ScrapeSearchResult:
                             cursor.execute(sql, (uuid,))
                             result = cursor.fetchone()
                             if not result:
-                                try:
-                                    publisher_channel.basic_publish(exchange='', routing_key='company_link',
+                                result = publisher_channel.basic_publish(exchange='', routing_key='company_link',
                                                                 body=uuid.encode('utf-8'),
-                                                                mandatory=True,
                                                                 properties=pika.BasicProperties(delivery_mode=2))
-                                except pika.exceptions.UnroutableError:
-                                    print(f"[x] [ScrapeSearchResult] UnroutableError: {uuid}")
-                                    consumer_channel.stop_consuming()
+                                if not result:
+                                    print(f"[x] [ScrapeSearchResult] Failed to publish message: {uuid}")
+                                    publisher_channel.stop_consuming()
                                     break
-
+                    else:
+                        result = publisher_channel.basic_publish(exchange='', routing_key='company_link',
+                                                        body=uuid.encode('utf-8'),
+                                                        properties=pika.BasicProperties(delivery_mode=2))
+                        if not result:
+                            print(f"[x] [ScrapeSearchResult] Failed to publish message: {uuid}")
+                            publisher_channel.stop_consuming()
+                            break
+                                
                 current_page += 1
                 response = self.get_with_cookie(f"{url}pg{current_page}")
                 soup = BeautifulSoup(response.text, 'html.parser')
