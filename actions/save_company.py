@@ -6,6 +6,7 @@ import pika
 import pymysql.cursors
 import uuid
 import datetime
+import pypinyin
 
 from config import mysql_config, rabbitmq_config
 
@@ -113,6 +114,15 @@ class SaveCompany:
 
         return float(string)
 
+    def get_provice(self, address):
+        provinces = ["北京市", "天津市", "河北省", "山西省", "内蒙古自治区", "辽宁省", "吉林省", "黑龙江省", "上海市", "江苏省", "浙江省", "安徽省", "福建省", "江西省", "山东省", "河南省", "湖北省", "湖南省", "广东省", "广西壮族自治区", "海南省", "重庆市", "四川省", "贵州省", "云南省", "西藏自治区", "陕西省", "甘肃省", "青海省", "宁夏回族自治区", "新疆维吾尔自治区", "台湾省", "香港特别行政区", "澳门特别行政区"]
+
+        for province in provinces:
+            if province in address:
+                return province
+
+        return None
+
     def save(self):
         # update if exists, insert if not
         try:
@@ -146,6 +156,7 @@ class SaveCompany:
                 'registration_authority': self.company_data['details']['登记机关'],
                 'english_name': self.company_data['details']['英文名称'],
                 'registered_address': self.company_data['details']['注册地址'],
+                'province': self.get_provice(self.company_data['details']['注册地址']),
                 'business_scope': self.company_data['details']['经营范围'],
                 'updated_at': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
@@ -160,8 +171,8 @@ class SaveCompany:
                     if not result:
                         print(f"[x] [SaveCompany] Inserting {company['id']} into database")
                         query = """
-                            INSERT INTO companies(id, title, phone, email, website, ceo, registered_capital, date_of_establishment, operating_status, registration_number, social_credit_code, organization_code, tax_registration_number, company_type, operating_period, industry, taxpayer_qualification, approval_date, paid_in_capital, staff_size, insured_staff_size, registration_authority, english_name, registered_address, business_scope, updated_at)
-                            VALUES (%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s, %s, %s)
+                            INSERT INTO companies(id, title, phone, email, website, ceo, registered_capital, date_of_establishment, operating_status, registration_number, social_credit_code, organization_code, tax_registration_number, company_type, operating_period, industry, taxpayer_qualification, approval_date, paid_in_capital, staff_size, insured_staff_size, registration_authority, english_name, registered_address, province, business_scope, updated_at)
+                            VALUES (%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s, %s, %s, %s,%s, %s,%s, %s, %s, %s)
                         """
                         cursor.execute(query, (
                             company['id'], company['title'], company['phone'], company['email'], company['website'],
@@ -171,12 +182,12 @@ class SaveCompany:
                             company['company_type'], company['operating_period'], company['industry'],
                             company['taxpayer_qualification'], company['approval_date'], company['paid_in_capital'],
                             company['staff_size'], company['insured_staff_size'], company['registration_authority'],
-                            company['english_name'], company['registered_address'], company['business_scope'],
-                            company['updated_at']))
+                            company['english_name'], company['registered_address'], company['province'],
+                            company['business_scope'], company['updated_at']))
                     else:
                         print(f"[x] [SaveCompany] Updating {company['id']} in database")
                         query = """
-                            UPDATE companies SET title = %s, phone = %s, email = %s, website = %s, ceo = %s, registered_capital = %s, date_of_establishment = %s, operating_status = %s, registration_number = %s, social_credit_code = %s, organization_code = %s, tax_registration_number = %s, company_type = %s, operating_period = %s, industry = %s, taxpayer_qualification = %s, approval_date = %s, paid_in_capital = %s, staff_size = %s, insured_staff_size = %s, registration_authority = %s, english_name = %s, registered_address = %s, business_scope = %s, updated_at = %s
+                            UPDATE companies SET title = %s, phone = %s, email = %s, website = %s, ceo = %s, registered_capital = %s, date_of_establishment = %s, operating_status = %s, registration_number = %s, social_credit_code = %s, organization_code = %s, tax_registration_number = %s, company_type = %s, operating_period = %s, industry = %s, taxpayer_qualification = %s, approval_date = %s, paid_in_capital = %s, staff_size = %s, insured_staff_size = %s, registration_authority = %s, english_name = %s, registered_address = %s, province = %s, business_scope = %s, updated_at = %s
                             WHERE id = %s
                         """
                         cursor.execute(query, (
@@ -188,8 +199,8 @@ class SaveCompany:
                             company['company_type'], company['operating_period'], company['industry'],
                             company['taxpayer_qualification'], company['approval_date'], company['paid_in_capital'],
                             company['staff_size'], company['insured_staff_size'], company['registration_authority'],
-                            company['english_name'], company['registered_address'], company['business_scope'],
-                            company['id'], company['updated_at']))
+                            company['english_name'], company['registered_address'], company['province'],
+                            company['business_scope'], company['id'], company['updated_at']))
 
                     for table in ['annual_reports', 'branches', 'shareholders', 'main_staff', 'foreign_investments',
                                   'changes']:
@@ -246,8 +257,7 @@ class SaveCompany:
                                 branch['person'], branch['date'], branch['status']))
 
                     for shareholder in self.company_data['shareholders']:
-                        ratio = shareholder['ratio'].replace('%', '') if shareholder['ratio'] else None
-                        
+                        ratio = float(shareholder['ratio'].replace('%', '')) if shareholder['ratio'] else None
                         shareholder = {
                             'id': uuid.uuid4(),
                             'company': company['id'],
