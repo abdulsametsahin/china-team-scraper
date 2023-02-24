@@ -48,6 +48,7 @@ class ScrapeSearchResult:
                 connection = pika.BlockingConnection(parameters)
                 consumer_channel = connection.channel()
                 publisher_channel = connection.channel()
+                publisher_channel.confirm_delivery()
                 self.scrape(consumer_channel, publisher_channel)
                 consumer_channel.close()
                 publisher_channel.close()
