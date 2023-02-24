@@ -7,9 +7,9 @@ rabbitmq_config = {
 
 mysql_config = {
     'host': 'localhost',
-    'port': 3306,
+    'port': 3307,
     'user': 'root',
-    'password': 'root',
+    'password': 'guest123',
     'database': 'scraper',
     'save_workers': 2,
     'translate_names': False,
