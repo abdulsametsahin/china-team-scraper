@@ -14,7 +14,7 @@ import pymysql
 class ScrapeSearchResult:
     def __init__(self):
         self.worker_count = 5
-        self.max_message_count = 30000
+        self.max_message_count = 29000
         self.execute()
 
     def execute(self):
