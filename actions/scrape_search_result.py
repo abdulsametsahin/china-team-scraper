@@ -110,35 +110,15 @@ class ScrapeSearchResult:
             while current_page <= page_count:
                 for company in soup.select('.list-body-title a'):
                     uuid = company['href'].split('/')[-1]
-                    if not gongsi_config['scrape_existing']:
-                        with cnx.cursor() as cursor:
-                            sql = "SELECT `id` FROM `companies` WHERE `id` = %s"
-                            cursor.execute(sql, (uuid,))
-                            result = cursor.fetchone()
-                            if not result:
-                                try:
-                                    publisher_channel.basic_publish(exchange='', routing_key='company_link',
-                                                                    body=uuid.encode(
-                                                                        'utf-8'),
-                                                                    mandatory=True,
-                                                                    properties=pika.BasicProperties(delivery_mode=2))
-                                except Exception as e:
-                                    print(
-                                        f"[x] [ScrapeSearchResult] Limit exceeded: {e}")
-                                    publisher_channel.close()
-                                    break
-                    else:
-                        try:
-                            publisher_channel.basic_publish(exchange='', routing_key='company_link',
-                                                            body=uuid.encode(
-                                                                     'utf-8'),
-                                                            mandatory=True,
-                                                            properties=pika.BasicProperties(delivery_mode=2))
-                        except Exception as e:
-                            print(
-                                f"[x] [ScrapeSearchResult] Limit exceeded: {e}")
-                            publisher_channel.close()
-                            break
+                    try:
+                        publisher_channel.basic_publish(exchange='', routing_key='company_link',
+                                                        body=uuid.encode('utf-8'), mandatory=True,
+                                                        properties=pika.BasicProperties(delivery_mode=2))
+                    except Exception as e:
+                        print(
+                            f"[x] [ScrapeSearchResult] Limit exceeded: {e}")
+                        publisher_channel.close()
+                        break
 
                 current_page += 1
                 response = self.get_with_cookie(f"{url}pg{current_page}")
