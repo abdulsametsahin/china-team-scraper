@@ -73,6 +73,6 @@ Running the scraper requires both RabbitMQ and MySQL. You can use existing insta
 * [ ]  Check ratio in shareholder table
 * [ ]  Create another column for province/city in companies table.
 * [ ]  Make paid_in_capital column doble, parse money
-* [ ]  Limit queue by args
+* [X]  Limit queue by args
 * [ ]  Split pagination links
 * [ ]  Split search results which has more than 200 pages
