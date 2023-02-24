@@ -251,7 +251,7 @@ class SaveCompany:
                             'company': company['id'],
                             'name': shareholder['name'],
                             'ratio': self.get_num(
-                                shareholder['ratio'].replace('%', '') if shareholder['ratio'] else None),
+                                shareholder['ratio'].replace('.', ',').replace('%', '') if shareholder['ratio'] else None),
                             'capital': self.get_money(shareholder['capital']),
                             'date': None if shareholder['date'] == "-" or len(shareholder['date']) < 1 else shareholder[
                                 'date'],
