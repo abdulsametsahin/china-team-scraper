@@ -65,13 +65,3 @@ Running the scraper requires both RabbitMQ and MySQL. You can use existing insta
 7. To run the worker script, use the command `python worker.py` in your terminal. This will start the worker process and enable it to receive and process tasks from the RabbitMQ message queue.
 
 **You can run as many workers as you need to scale the scraper. Once you have initiated the master script, you can run workers from any server and they will be able to communicate with the master process through the RabbitMQ message queue. This enables you to easily scale the scraper to handle larger workloads.**
-
-## Todos
-
-* [X]  Convert EUR and USD to Yuan
-* [X]  Check ratio in shareholder table
-* [X]  Create another column for province/city in companies table.
-* [X]  Make paid_in_capital column doble, parse money
-* [X]  Limit queue by args
-* [ ]  Split pagination links
-* [X]  Split search results which has more than 200 pages
