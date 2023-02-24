@@ -18,7 +18,7 @@ def worker():
             consumer_channel = connection.channel()
             publisher_channel = connection.channel()
 
-            queue_arguments = {'x-queue-mode': 'lazy', 'x-max-length': 29999}
+            queue_arguments = {'x-queue-mode': 'lazy', 'x-max-length': 750000}
             consume_queue = consumer_channel.queue_declare(queue='company_link', durable=True,
                                                            arguments=queue_arguments)
 

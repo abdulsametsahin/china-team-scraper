@@ -13,8 +13,8 @@ import pymysql
 
 class ScrapeSearchResult:
     def __init__(self):
-        self.worker_count = 5
-        self.max_message_count = 29000
+        self.worker_count = 3
+        self.max_message_count = 750000
         self.execute()
 
     def execute(self):
@@ -69,7 +69,7 @@ class ScrapeSearchResult:
         queue_arguments = {'x-queue-mode': 'lazy'}
         consumer_channel.queue_declare(
             queue='search_page', durable=True, arguments=queue_arguments)
-        queue_arguments = {'x-queue-mode': 'lazy', 'x-max-length': 29999}
+        queue_arguments = {'x-queue-mode': 'lazy', 'x-max-length': 750000}
         publisher_queue = publisher_channel.queue_declare(
             queue='company_link', durable=True, arguments=queue_arguments)
 
@@ -104,7 +104,7 @@ class ScrapeSearchResult:
             else:
                 page_count = 1
 
-            print(f"[x] [ScrapeSearchResult] Page count: {page_count}")
+            print(f"[x] [ScrapeSearchResult] Page count: {page_count} for {url}")
 
             if publisher_queue.method.message_count > self.max_message_count:
                 print(
@@ -113,6 +113,7 @@ class ScrapeSearchResult:
                 break
 
             current_page = 1
+
             while current_page <= page_count:
                 for company in soup.select('.list-body-title a'):
                     uuid = company['href'].split('/')[-1]
