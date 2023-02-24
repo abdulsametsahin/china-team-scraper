@@ -114,11 +114,9 @@ class SaveCompany:
         amount = float(string) * multiplier;
 
         if is_eur:
-            print(f"[x] !!!! [SaveCompany] EUR: {amount}")
             amount = amount * exchange_rates['eur_to_yuan']
 
         if is_usd:
-            print(f"[x] !!!! [SaveCompany] USD: {amount}")
             amount = amount * exchange_rates['usd_to_yuan']
 
         return round(amount, 2)
