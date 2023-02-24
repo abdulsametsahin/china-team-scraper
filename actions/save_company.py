@@ -1,4 +1,5 @@
 import json
+import sys
 import time
 
 import pika
@@ -354,10 +355,10 @@ class SaveCompany:
                     try:
                         self.cnx.commit()
                     except pymysql.err.OperationError as e:
-                        print(f"Error for while commiting {self.company_data['basic_info']['uuid']}: {e}")
+                        print(f"[X] [SaveCompany] Error for while committing {self.company_data['basic_info']['uuid']} on line {sys.exc_info()[-1].tb_lineno}: {e}")
                         print(f"Will retry in 2 seconds...")
                         time.sleep(2)
                         self.cnx.commit()
 
         except Exception as e:
-            print(f"Error for {self.company_data['basic_info']['uuid']}: {e}")
+            print(f"[X] [SaveCompany] Error for {self.company_data['basic_info']['uuid']} on line {sys.exc_info()[-1].tb_lineno}: {e}")
