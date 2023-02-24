@@ -42,8 +42,7 @@ class ScrapeSearchResult:
     def worker(self):
         while True:
             try:
-                credentials = pika.PlainCredentials(
-                    rabbitmq_config['user'], rabbitmq_config['password'])
+                credentials = pika.PlainCredentials(rabbitmq_config['user'], rabbitmq_config['password'])
                 parameters = pika.ConnectionParameters(
                     host=rabbitmq_config['host'], port=rabbitmq_config['port'], credentials=credentials, heartbeat=0)
                 connection = pika.BlockingConnection(parameters)
@@ -66,15 +65,12 @@ class ScrapeSearchResult:
                               database=mysql_config['database'], port=mysql_config['port'])
 
         queue_arguments = {'x-queue-mode': 'lazy'}
-        consumer_channel.queue_declare(
-            queue='search_page', durable=True, arguments=queue_arguments)
+        consumer_channel.queue_declare(queue='search_page', durable=True, arguments=queue_arguments)
         queue_arguments = {'x-queue-mode': 'lazy', 'x-max-length': 29999}
-        publisher_queue = publisher_channel.queue_declare(
-            queue='company_link', durable=True, arguments=queue_arguments)
+        publisher_queue = publisher_channel.queue_declare(queue='company_link', durable=True, arguments=queue_arguments)
 
         if publisher_queue.method.message_count > self.max_message_count:
-            print(
-                f"[x] [ScrapeSearchResult] Message count is too large, stop consuming")
+            print(f"[x] [ScrapeSearchResult] Message count is too large, stop consuming")
             return
 
         consumer_channel.basic_qos(prefetch_count=1)
@@ -89,16 +85,14 @@ class ScrapeSearchResult:
             result_count = soup.select_one('.select-result span')
             if result_count is None or int(result_count.text.replace('+', '')) == 0:
                 print("[x] [ScrapeSearchResult] No result")
-                consumer_channel.basic_ack(
-                    delivery_tag=method_frame.delivery_tag)
+                consumer_channel.basic_ack(delivery_tag=method_frame.delivery_tag)
                 continue
 
             page_count = soup.select_one('.page-count')
             if page_count:
                 page_count = int(page_count.text.split(' ')[1].split(' ')[0])
                 if page_count > 200:
-                    print(
-                        f"[x] [ScrapeSearchResult] Page count is too large ({page_count}), set to 200")
+                    print(f"[x] [ScrapeSearchResult] Page count is too large ({page_count}), set to 200")
                     page_count = 200
             else:
                 page_count = 1
@@ -117,14 +111,11 @@ class ScrapeSearchResult:
                             if not result:
                                 try:
                                     publisher_channel.basic_publish(exchange='', routing_key='company_link',
-                                                                    body=uuid.encode(
-                                                                        'utf-8'),
-                                                                    properties=pika.BasicProperties(
-                                                                        delivery_mode=2)
-                                                                    mandatory=True)
+                                                                body=uuid.encode('utf-8'),
+                                                                mandatory=True,
+                                                                properties=pika.BasicProperties(delivery_mode=2))
                                 except pika.exceptions.UnroutableError:
-                                    print(
-                                        f"[x] [ScrapeSearchResult] UnroutableError: {uuid}")
+                                    print(f"[x] [ScrapeSearchResult] UnroutableError: {uuid}")
                                     consumer_channel.stop_consuming()
                                     break
 
@@ -135,8 +126,7 @@ class ScrapeSearchResult:
             print(f"[x] [ScrapeSearchResult] Task completed: {body}")
 
             if publisher_queue.method.message_count > self.max_message_count:
-                print(
-                    f"[x] [ScrapeSearchResult] Message count is too large, stop consuming")
+                print(f"[x] [ScrapeSearchResult] Message count is too large, stop consuming")
                 consumer_channel.stop_consuming()
                 break
 
