@@ -243,15 +243,16 @@ class SaveCompany:
                             VALUES (%s,%s,%s,%s,%s,%s)
                         """
                         cursor.execute(query, (branch['id'], branch['company'], branch['name'],
-                                               branch['person'], branch['date'], branch['status']))
+                                branch['person'], branch['date'], branch['status']))
 
                     for shareholder in self.company_data['shareholders']:
+                        ratio = shareholder['ratio'].replace('%', '') if shareholder['ratio'] else None
+                        
                         shareholder = {
                             'id': uuid.uuid4(),
                             'company': company['id'],
                             'name': shareholder['name'],
-                            'ratio': self.get_num(
-                                shareholder['ratio'].replace('.', ',').replace('%', '') if shareholder['ratio'] else None),
+                            'ratio': ratio,
                             'capital': self.get_money(shareholder['capital']),
                             'date': None if shareholder['date'] == "-" or len(shareholder['date']) < 1 else shareholder[
                                 'date'],
