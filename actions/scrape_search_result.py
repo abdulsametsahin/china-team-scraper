@@ -80,16 +80,16 @@ class ScrapeSearchResult:
 
         consumer_channel.basic_qos(prefetch_count=1)
 
-        print("[x] [ScrapeSearchResult] Consuming tasks")
+        # print("[x] [ScrapeSearchResult] Consuming tasks")
         for method_frame, properties, body in consumer_channel.consume('search_page', auto_ack=False):
-            print(f"[x] [ScrapeSearchResult] Consumed task: {body}")
+            # print(f"[x] [ScrapeSearchResult] Consumed task: {body}")
             url = f"https://www.gongsi.com.cn/search/{body.decode('utf-8')}"
 
             response = self.get_with_cookie(url)
             soup = BeautifulSoup(response.text, 'html.parser')
             result_count = soup.select_one('.select-result span')
             if result_count is None or int(result_count.text.replace('+', '')) == 0:
-                print("[x] [ScrapeSearchResult] No result")
+                # print("[x] [ScrapeSearchResult] No result")
                 consumer_channel.basic_ack(
                     delivery_tag=method_frame.delivery_tag)
                 continue
@@ -100,15 +100,15 @@ class ScrapeSearchResult:
                 if page_count > 200:
                     if 'ci' in url:
                         page_count = 200
-                        print(
-                            f"[x] [ScrapeSearchResult] Page count is too large ({page_count}), set to 200")
+                        # print(
+                        #    f"[x] [ScrapeSearchResult] Page count is too large ({page_count}), set to 200")
                     else:
-                        print(
-                            f"[x] [ScrapeSearchResult] Page count is too large ({page_count}), splitted into 2")
+                        # print(
+                        #    f"[x] [ScrapeSearchResult] Page count is too large ({page_count}), splitted into 2")
 
                         slug = body.decode('utf-8')
                         for new_url in [f"{slug}ci1", f"{slug}ci2"]:
-                            print(f"[x] [ScrapeSearchResult] New url is {new_url}")
+                            # print(f"[x] [ScrapeSearchResult] New url is {new_url}")
                             publisher_channel.basic_publish(exchange='', routing_key='search_page',
                                                             body=new_url.encode('utf-8'),
                                                             properties=pika.BasicProperties(delivery_mode=2))
@@ -118,7 +118,7 @@ class ScrapeSearchResult:
             else:
                 page_count = 1
 
-            print(f"[x] [ScrapeSearchResult] Page count: {page_count} for {url}")
+            # print(f"[x] [ScrapeSearchResult] Page count: {page_count} for {url}")
 
             if publisher_queue.method.message_count > self.max_message_count:
                 print(
@@ -126,24 +126,24 @@ class ScrapeSearchResult:
                 publisher_channel.close()
                 break
 
-            current_page = 1
+        current_page = 1
 
-            while current_page <= page_count:
-                for company in soup.select('.list-body-title a'):
-                    uuid = company['href'].split('/')[-1]
-                    try:
-                        publisher_channel.basic_publish(exchange='', routing_key='company_link',
-                                                        body=uuid.encode('utf-8'), mandatory=True,
-                                                        properties=pika.BasicProperties(delivery_mode=2))
-                    except Exception as e:
-                        print(
-                            f"[x] [ScrapeSearchResult] Limit exceeded: {e}")
-                        publisher_channel.close()
-                        break
+        while current_page <= page_count:
+            for company in soup.select('.list-body-title a'):
+                uuid = company['href'].split('/')[-1]
+                try:
+                    publisher_channel.basic_publish(exchange='', routing_key='company_link',
+                                                    body=uuid.encode('utf-8'), mandatory=True,
+                                                    properties=pika.BasicProperties(delivery_mode=2))
+                except Exception as e:
+                    print(
+                        f"[x] [ScrapeSearchResult] Limit exceeded: {e}")
+                    publisher_channel.close()
+                    break
 
-                current_page += 1
-                response = self.get_with_cookie(f"{url}pg{current_page}")
-                soup = BeautifulSoup(response.text, 'html.parser')
+            current_page += 1
+            response = self.get_with_cookie(f"{url}pg{current_page}")
+            soup = BeautifulSoup(response.text, 'html.parser')
 
-            print(f"[x] [ScrapeSearchResult] Task completed: {body}")
-            consumer_channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+        # print(f"[x] [ScrapeSearchResult] Task completed: {body}")
+        consumer_channel.basic_ack(delivery_tag=method_frame.delivery_tag)
