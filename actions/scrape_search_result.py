@@ -98,9 +98,23 @@ class ScrapeSearchResult:
             if page_count:
                 page_count = int(page_count.text.split(' ')[1].split(' ')[0])
                 if page_count > 200:
-                    print(
-                        f"[x] [ScrapeSearchResult] Page count is too large ({page_count}), set to 200")
-                    page_count = 200
+                    if 'ci' in url:
+                        page_count = 200
+                        print(
+                            f"[x] [ScrapeSearchResult] Page count is too large ({page_count}), set to 200")
+                    else:
+                        print(
+                            f"[x] [ScrapeSearchResult] Page count is too large ({page_count}), splitted into 2")
+
+                        slug = body.decode('utf-8')
+                        for new_url in [f"{slug}ci1", f"{slug}ci2"]:
+                            print(f"[x] [ScrapeSearchResult] New url is {new_url}")
+                            publisher_channel.basic_publish(exchange='', routing_key='search_page',
+                                                            body=new_url.encode('utf-8'),
+                                                            properties=pika.BasicProperties(delivery_mode=2))
+                        consumer_channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+                        continue
+
             else:
                 page_count = 1
 
