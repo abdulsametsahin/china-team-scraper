@@ -100,7 +100,6 @@ class ScrapeSearchResult:
             print(f"[x] [ScrapeSearchResult] Page count: {page_count}")
 
             current_page = 1
-            stop_consuming = False
             while current_page <= page_count:
                 for company in soup.select('.list-body-title a'):
                     uuid = company['href'].split('/')[-1]
@@ -115,25 +114,20 @@ class ScrapeSearchResult:
                                                                 properties=pika.BasicProperties(delivery_mode=2))
                                 if not result:
                                     print(f"[x] [ScrapeSearchResult] Failed to publish message: {uuid}")
-                                    publisher_channel.stop_consuming()
-                                    stop_consuming = True
-                                    break
+                                    publisher_channel.close()
+                                    return
                     else:
                         result = publisher_channel.basic_publish(exchange='', routing_key='company_link',
                                                         body=uuid.encode('utf-8'),
                                                         properties=pika.BasicProperties(delivery_mode=2))
                         if not result:
                             print(f"[x] [ScrapeSearchResult] Failed to publish message: {uuid}")
-                            publisher_channel.stop_consuming()
-                            stop_consuming = True
-                            break
+                            publisher_channel.close()
+                            return
                                 
                 current_page += 1
                 response = self.get_with_cookie(f"{url}pg{current_page}")
                 soup = BeautifulSoup(response.text, 'html.parser')
-
-            if stop_consuming:
-                break
             
             print(f"[x] [ScrapeSearchResult] Task completed: {body}")
 
