@@ -126,24 +126,24 @@ class ScrapeSearchResult:
                 publisher_channel.close()
                 break
 
-        current_page = 1
+            current_page = 1
 
-        while current_page <= page_count:
-            for company in soup.select('.list-body-title a'):
-                uuid = company['href'].split('/')[-1]
-                try:
-                    publisher_channel.basic_publish(exchange='', routing_key='company_link',
-                                                    body=uuid.encode('utf-8'), mandatory=True,
-                                                    properties=pika.BasicProperties(delivery_mode=2))
-                except Exception as e:
-                    print(
-                        f"[x] [ScrapeSearchResult] Limit exceeded: {e}")
-                    publisher_channel.close()
-                    break
+            while current_page <= page_count:
+                for company in soup.select('.list-body-title a'):
+                    uuid = company['href'].split('/')[-1]
+                    try:
+                        publisher_channel.basic_publish(exchange='', routing_key='company_link',
+                                                        body=uuid.encode('utf-8'), mandatory=True,
+                                                        properties=pika.BasicProperties(delivery_mode=2))
+                    except Exception as e:
+                        print(
+                            f"[x] [ScrapeSearchResult] Limit exceeded: {e}")
+                        publisher_channel.close()
+                        break
 
-            current_page += 1
-            response = self.get_with_cookie(f"{url}pg{current_page}")
-            soup = BeautifulSoup(response.text, 'html.parser')
+                current_page += 1
+                response = self.get_with_cookie(f"{url}pg{current_page}")
+                soup = BeautifulSoup(response.text, 'html.parser')
 
-        # print(f"[x] [ScrapeSearchResult] Task completed: {body}")
-        consumer_channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+            # print(f"[x] [ScrapeSearchResult] Task completed: {body}")
+            consumer_channel.basic_ack(delivery_tag=method_frame.delivery_tag)
