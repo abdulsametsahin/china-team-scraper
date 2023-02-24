@@ -1,14 +1,12 @@
 import json
-import os
 import time
 
 import pika
 import pymysql.cursors
 import uuid
 import datetime
-import pypinyin
 
-from config import mysql_config, rabbitmq_config
+from config import mysql_config, rabbitmq_config, exchange_rates
 
 
 class SaveCompany:
@@ -83,6 +81,15 @@ class SaveCompany:
         if self.doesnt_contain_numbers(string):
             return None
 
+        is_eur = False
+        is_usd = False
+
+        if '欧元' in string:
+            is_eur = True
+
+        if '美元' in string:
+            is_usd = True
+
         string = string.strip()
         string = string.replace('元', '')
         multiplier = 1
@@ -103,7 +110,17 @@ class SaveCompany:
         string = string.split('（')[0]
         string = ''.join([c for c in string if c.isdigit() or c == '.'])
 
-        return round(float(string) * multiplier, 2)
+        amount = float(string) * multiplier;
+
+        if is_eur:
+            print(f"[x] !!!! [SaveCompany] EUR: {amount}")
+            amount = amount * exchange_rates['eur_to_yuan']
+
+        if is_usd:
+            print(f"[x] !!!! [SaveCompany] USD: {amount}")
+            amount = amount * exchange_rates['usd_to_yuan']
+
+        return round(amount, 2)
 
     def get_num(self, string):
         if self.doesnt_contain_numbers(string):
@@ -150,7 +167,7 @@ class SaveCompany:
                 'taxpayer_qualification': self.company_data['details']['纳税人资质'],
                 'approval_date': None if self.company_data['details']['核准日期'] == '-' else
                 self.company_data['details']['核准日期'],
-                'paid_in_capital': self.company_data['details']['实缴资本'],
+                'paid_in_capital': self.get_money(self.company_data['details']['实缴资本']),
                 'staff_size': self.company_data['details']['人员规模'],
                 'insured_staff_size': self.company_data['details']['参保人数'],
                 'registration_authority': self.company_data['details']['登记机关'],
@@ -257,6 +274,9 @@ class SaveCompany:
                                 branch['person'], branch['date'], branch['status']))
 
                     for shareholder in self.company_data['shareholders']:
+                        if shareholder['ratio'] == '-':
+                            shareholder['ratio'] = None
+
                         ratio = float(shareholder['ratio'].replace('%', '')) if shareholder['ratio'] else None
                         shareholder = {
                             'id': uuid.uuid4(),
