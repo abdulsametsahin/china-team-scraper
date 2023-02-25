@@ -14,7 +14,7 @@ import pymysql
 class ScrapeSearchResult:
     def __init__(self):
         self.worker_count = 3
-        self.max_message_count = 750000
+        self.max_message_count = 100000
         self.execute()
 
     def execute(self):
@@ -54,8 +54,8 @@ class ScrapeSearchResult:
                 consumer_channel.close()
                 publisher_channel.close()
                 connection.close()
-                print("[x] [ScrapeSearchResult] Sleeping for 15 minutes")
-                time.sleep(60 * 15)
+                print("[x] [ScrapeSearchResult] Sleeping for 1 hour")
+                time.sleep(60 * 60)
             except Exception as e:
                 print(f"[x] [ScrapeSearchResult] Error: {e}")
                 print("[x] [ScrapeSearchResult] Sleeping for 1 minute")
@@ -69,7 +69,7 @@ class ScrapeSearchResult:
         queue_arguments = {'x-queue-mode': 'lazy'}
         consumer_channel.queue_declare(
             queue='search_page', durable=True, arguments=queue_arguments)
-        queue_arguments = {'x-queue-mode': 'lazy', 'x-max-length': 750000}
+        queue_arguments = {'x-queue-mode': 'lazy', 'x-max-length': 100000, 'x-overflow': 'reject-publish'}
         publisher_queue = publisher_channel.queue_declare(
             queue='company_link', durable=True, arguments=queue_arguments)
 
@@ -100,12 +100,7 @@ class ScrapeSearchResult:
                 if page_count > 200:
                     if 'ci' in url:
                         page_count = 200
-                        # print(
-                        #    f"[x] [ScrapeSearchResult] Page count is too large ({page_count}), set to 200")
                     else:
-                        # print(
-                        #    f"[x] [ScrapeSearchResult] Page count is too large ({page_count}), splitted into 2")
-
                         slug = body.decode('utf-8')
                         for new_url in [f"{slug}ci1", f"{slug}ci2"]:
                             # print(f"[x] [ScrapeSearchResult] New url is {new_url}")
@@ -118,12 +113,11 @@ class ScrapeSearchResult:
             else:
                 page_count = 1
 
-            # print(f"[x] [ScrapeSearchResult] Page count: {page_count} for {url}")
-
-            if publisher_queue.method.message_count > self.max_message_count:
+            if publisher_queue.method.message_count >= self.max_message_count:
                 print(
                     f"[x] [ScrapeSearchResult] Message count is too large, stop consuming")
-                publisher_channel.close()
+                consumer_channel.basic_nack(
+                    delivery_tag=method_frame.delivery_tag)
                 break
 
             current_page = 1
@@ -138,7 +132,8 @@ class ScrapeSearchResult:
                     except Exception as e:
                         print(
                             f"[x] [ScrapeSearchResult] Limit exceeded: {e}")
-                        publisher_channel.close()
+                        consumer_channel.basic_nack(
+                            delivery_tag=method_frame.delivery_tag)
                         break
 
                 current_page += 1

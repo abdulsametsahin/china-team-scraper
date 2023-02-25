@@ -12,7 +12,6 @@ mysql_config = {
     'password': 'guest123',
     'database': 'scraper',
     'save_workers': 2,
-    'translate_names': False,
 }
 
 gongsi_config = {

@@ -11,10 +11,11 @@ class GenerateSearchResult:
 
     def execute(self):
         while True:
+            print(rabbitmq_config)
             try:
                 credentials = pika.PlainCredentials(rabbitmq_config['user'], rabbitmq_config['password'])
                 parameters = pika.ConnectionParameters(
-                    host=rabbitmq_config['host'], port=rabbitmq_config['port'], credentials=credentials, heartbeat=120)
+                    host=rabbitmq_config['host'], port=rabbitmq_config['port'], credentials=credentials, heartbeat=5)
                 connection = pika.BlockingConnection(parameters)
                 channel = connection.channel()
                 self.generate(channel)
