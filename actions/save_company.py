@@ -339,7 +339,7 @@ class SaveCompany:
                             'id': uuid.uuid4(),
                             'company': company['id'],
                             'change_type': change['change_type'],
-                            'date': change['date'],
+                            'date': change['date'] if len(change['date']) > 0 else None,
                             'before': change['before'],
                             'after': change['after'],
                         }
