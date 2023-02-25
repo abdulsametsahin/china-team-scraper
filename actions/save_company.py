@@ -153,7 +153,7 @@ class SaveCompany:
                 'title': self.company_data['basic_info']['title'],
                 'phone': phone,
                 'email': self.company_data['basic_info']['email'],
-                'website': self.company_data['basic_info']['website'],
+                'website': self.company_data['basic_info']['website'][:99] if self.company_data['basic_info']['website'] is not None else None,
                 'ceo': self.company_data['details']['法定代表人'],
                 'registered_capital': self.get_money(self.company_data['details']['注册资本']),
                 'date_of_establishment': None if self.company_data['details']['成立日期'] == '-' else

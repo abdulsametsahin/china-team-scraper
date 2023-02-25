@@ -11,7 +11,7 @@ mysql_config = {
     'user': 'root',
     'password': 'guest123',
     'database': 'scraper',
-    'save_workers': 2,
+    'save_workers': 1,
 }
 
 gongsi_config = {
