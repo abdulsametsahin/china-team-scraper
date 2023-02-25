@@ -89,7 +89,7 @@ CREATE TABLE `companies` (
   `paid_in_capital` double DEFAULT NULL,
   `staff_size` varchar(20) DEFAULT NULL,
   `insured_staff_size` varchar(20) DEFAULT NULL,
-  `registration_authority` varchar(50) DEFAULT NULL,
+  `registration_authority` varchar(100) DEFAULT NULL,
   `english_name` varchar(200) DEFAULT NULL,
   `registered_address` varchar(150) DEFAULT NULL,
   `province` varchar(50) DEFAULT NULL,
