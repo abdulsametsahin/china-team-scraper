@@ -1,6 +1,17 @@
 from flask import Flask, render_template
-from config import mysql_config
+
 import pymysql
+
+mysql_config = {
+    'host': '167.172.175.101',
+    'port': 3307,
+    'user': 'root',
+    'password': 'guest123',
+    'database': 'scraper',
+    'save_workers': 2,
+    'translate_names': True,
+}
+
 
 app = Flask(__name__)
 
