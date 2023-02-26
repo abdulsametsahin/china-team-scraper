@@ -76,7 +76,7 @@ To prevent simultaneous queries, the scraper utilizes queues to store data in th
 in the database, it will be updated.
 
 [Read more](assets/docs/company_saver.md)
----
+
 
 ## Installation
 
