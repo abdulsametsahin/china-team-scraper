@@ -2,7 +2,6 @@ from actions.generate_search_result import GenerateSearchResult
 from actions.generate_cookie import GenerateCookie
 from actions.scrape_search_result import ScrapeSearchResult
 from actions.save_company import SaveCompany
-# from actions.translator import Translator
 from multiprocessing import Process
 
 from config import mysql_config

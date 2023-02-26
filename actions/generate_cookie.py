@@ -15,7 +15,6 @@ class GenerateCookie:
                 print("[x] [GenerateCookie] Sleeping for 1 hour")
                 time.sleep(60 * 60)
             except Exception as e:
-                raise e
                 print(f"Error: {e}")
                 time.sleep(5)
 
@@ -51,10 +50,8 @@ class GenerateCookie:
                 session.cookies = requests.utils.cookiejar_from_dict(cookies)
         except Exception as e:
             print(f"Error: {e}")
-            raise e
             self.login()
             self.test_cookie()
-
 
         response = session.get(url)
 
