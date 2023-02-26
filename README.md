@@ -5,10 +5,10 @@ This scraper was built by **China Team** for the Innoscripta Data Competition. I
 ## Table of contents
 
 * [How it works](#how-it-works-)
-  * [Search page generator](#search-page-generator-)
-  * [Search page scraper](#search-page-scraper-)
-  * [Company scraper](#company-scraper-)
-  * [Company saver](#company-saver-)
+  * [Search page generator](#search-page-generator)
+  * [Search page scraper](#search-page-scraper)
+  * [Company scraper](#company-scraper)
+  * [Company saver](#company-saver)
 * [Installation](#installation)
 
 ## How it works? 🤔
