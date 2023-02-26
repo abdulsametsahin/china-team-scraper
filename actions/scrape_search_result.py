@@ -134,7 +134,7 @@ class ScrapeSearchResult:
                             f"[x] [ScrapeSearchResult] Limit exceeded: {e}")
                         consumer_channel.basic_nack(
                             delivery_tag=method_frame.delivery_tag)
-                        break
+                        return
 
                 current_page += 1
                 response = self.get_with_cookie(f"{url}pg{current_page}")
