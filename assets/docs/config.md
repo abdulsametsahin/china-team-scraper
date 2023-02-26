@@ -27,7 +27,7 @@
 
 ## exchange_rates
 
-> These will be used to convert the currency of the company to yuan.
+> These will be used to convert the currency of the company to yuan. Because some companies declared their financial data in foreign currencies.
 
 - usd_to_yuan: USD to CNY exchange rate
 - eur_to_yuan: EUR to CNY exchange rate
