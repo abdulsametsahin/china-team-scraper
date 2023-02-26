@@ -24,14 +24,14 @@ The system comprises four different types of workers:
 * Company scraper
 * Company save worker.
 
-## Search page generator 🔍
+## Search page generator 
 
 There is a pagination limit in place for this system. Non-registered users have a limit of 100 pages, while registered users have a limit of 200 pages. 
 If a search result contains more than 200 pages, filters must be applied to generate search results with fewer pages.
 
 The search page generator is responsible for generating search pages and writing the links to the "**search\_page**" queue, which is then scraped by the "Search page scraper" worker.
 
-## Search page scraper 🔗
+## Search page scraper 
 
 This scraper, scrapes though all pages of the search result and writes company links onto "**company_link**" queue so that "Company scraper" can scrape them. We are not able to scrape more than 200 pages for every search result. 
 
@@ -39,7 +39,7 @@ This is the only scraper which needs authentication. Therefore, there is another
 
 > Note: To prevent long queue messages and maintain the performance of the scraper, it is designed to stop when the number of not scraped company links in the queue exceeds a certain threshold. Specifically, the scraper will pause when there are more than 30,000 not scraped links in the queue and resume when the number decreases to a safe level. This ensures that the scraper can continue to operate efficiently without overloading the RabbitMQ message queue.
 
-## Company scraper 🏢
+## Company scraper
 
 The scraper is designed to extract the following types of company data:
 
@@ -53,7 +53,7 @@ The scraper is designed to extract the following types of company data:
 
 > Note: Some companies do not have all of the above information. For example, some companies do not want to disclose their financial information, so they do not have annual reports.
 
-## Company saver 💾
+## Company saver 
 
 To prevent simultaneous queries, the scraper utilizes queues to store data in the database. If a company already exists in the database, it will be updated.
 
