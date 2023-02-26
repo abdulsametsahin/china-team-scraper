@@ -36,6 +36,8 @@ If a search result contains more than 200 pages, filters must be applied to gene
 The search page generator is responsible for generating search pages and writing the links to the "**search\_page**"
 queue, which is then scraped by the "Search page scraper" worker.
 
+[Read more](assets/docs/search_page_generator.md)
+
 ## Search page scraper
 
 This scraper, scrapes though all pages of the search result and writes company links onto "**company_link**" queue so
@@ -47,6 +49,8 @@ This is the only scraper which needs authentication. Therefore, there is another
 > number of not scraped company links in the queue exceeds a certain threshold. Specifically, the scraper will pause when
 > there are more than 30,000 not scraped links in the queue and resume when the number decreases to a safe level. This
 > ensures that the scraper can continue to operate efficiently without overloading the RabbitMQ message queue.
+
+[Read more](assets/docs/search_page_scraper.md)
 
 ## Company scraper
 
@@ -64,11 +68,14 @@ The scraper is designed to extract the following types of company data:
 > Note: Some companies do not have all of the above information. For example, some companies do not want to disclose
 > their financial information, so they do not have annual reports.
 
+[Read more](assets/docs/company_scraper.md)
+
 ## Company saver
 
 To prevent simultaneous queries, the scraper utilizes queues to store data in the database. If a company already exists
 in the database, it will be updated.
 
+[Read more](assets/docs/company_saver.md)
 ---
 
 ## Installation
