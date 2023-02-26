@@ -42,11 +42,13 @@ The scraper is designed to extract the following types of company data:
 
 * Basic company information, including the company's name, address, phone number, email, website, and other relevant details.
 * Detailed company information, including the company's industry, type, size, and other relevant details.
-* Branch locations and information about each branch.
+* Branches of the company, including the branch name, person, date, and status.
 * Key people associated with the company, such as executives and board members.
 * Information about investors who have provided funding to the company.
 * Information about shareholders who own stock in the company.
 * Annual reports filed by the company which contain financial information and employee count.
+
+> Note: Some companies do not have all of the above information. For example, some companies do not want to disclose their financial information, so they do not have annual reports.
 
 ## Company saver 💾
 
