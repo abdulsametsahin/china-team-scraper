@@ -130,8 +130,7 @@ class ScrapeSearchResult:
                                                         body=uuid.encode('utf-8'), mandatory=True,
                                                         properties=pika.BasicProperties(delivery_mode=2))
                     except Exception as e:
-                        print(
-                            f"[x] [ScrapeSearchResult] Limit exceeded: {e}")
+                        print("[x] [ScrapeSearchResult] Limit reached")
                         consumer_channel.basic_nack(
                             delivery_tag=method_frame.delivery_tag)
                         return
