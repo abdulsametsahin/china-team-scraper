@@ -11,7 +11,6 @@ class GenerateSearchResult:
 
     def execute(self):
         while True:
-            print(rabbitmq_config)
             try:
                 credentials = pika.PlainCredentials(rabbitmq_config['user'], rabbitmq_config['password'])
                 parameters = pika.ConnectionParameters(
