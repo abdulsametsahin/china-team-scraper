@@ -118,7 +118,7 @@ class ScrapeSearchResult:
                     f"[x] [ScrapeSearchResult] Message count is too large, stop consuming")
                 consumer_channel.basic_nack(
                     delivery_tag=method_frame.delivery_tag)
-                break
+                return
 
             current_page = 1
 
