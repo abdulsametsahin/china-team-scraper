@@ -47,7 +47,7 @@ This is the only scraper which needs authentication. Therefore, there is another
 
 > Note: To prevent long queue messages and maintain the performance of the scraper, it is designed to stop when the
 > number of not scraped company links in the queue exceeds a certain threshold. Specifically, the scraper will pause when
-> there are more than 30,000 not scraped links in the queue and resume when the number decreases to a safe level. This
+> there are more than 100,000 not scraped links in the queue and resume when the number decreases to a safe level. This
 > ensures that the scraper can continue to operate efficiently without overloading the RabbitMQ message queue.
 
 [Read more](assets/docs/search_page_scraper.md)
