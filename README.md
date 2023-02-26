@@ -26,15 +26,18 @@ The system comprises four different types of workers:
 
 ## Search page generator 🔍
 
-There is a pagiation limit in place for this system. Non-registered users have a limit of 100 pages, while registered users have a limit of 200 pages. Given that there are more than 200 pages of search results, filters must be applied to generate search results with fewer pages.
+There is a pagination limit in place for this system. Non-registered users have a limit of 100 pages, while registered users have a limit of 200 pages. 
+If a search result contains more than 200 pages, filters must be applied to generate search results with fewer pages.
 
 The search page generator is responsible for generating search pages and writing the links to the "**search\_page**" queue, which is then scraped by the "Search page scraper" worker.
 
 ## Search page scraper 🔗
 
-This scraper, scrapes though all pages of the search result and writes company links onto "**company_link**" queue so that "Company scraper" can scrape them. We are not able to scrape more than 200 pages for every search result. This is the only scraper which needs authectication. Therefore there is another worker to generate valid cookies.
+This scraper, scrapes though all pages of the search result and writes company links onto "**company_link**" queue so that "Company scraper" can scrape them. We are not able to scrape more than 200 pages for every search result. 
 
-> Note: To prevent long queue messages and maintain the performance of the scraper, it is designed to stop when the number of unscraped company links in the queue exceeds a certain threshold. Specifically, the scraper will pause when there are more than 30,000 unscraped links in the queue and resume when the number decreases to a safe level. This ensures that the scraper can continue to operate efficiently without overloading the RabbitMQ message queue.
+This is the only scraper which needs authentication. Therefore, there is another worker to generate valid cookies.
+
+> Note: To prevent long queue messages and maintain the performance of the scraper, it is designed to stop when the number of not scraped company links in the queue exceeds a certain threshold. Specifically, the scraper will pause when there are more than 30,000 not scraped links in the queue and resume when the number decreases to a safe level. This ensures that the scraper can continue to operate efficiently without overloading the RabbitMQ message queue.
 
 ## Company scraper 🏢
 
@@ -64,7 +67,7 @@ Running the scraper requires both RabbitMQ and MySQL. You can use existing insta
 
 ## Requirements
 
-* Pyhton3+ (Tested with 3.11)
+* Python3+ (Tested with 3.11)
 * Docker
 
 ## How to run?
@@ -77,4 +80,4 @@ Running the scraper requires both RabbitMQ and MySQL. You can use existing insta
 6. To run the master script, use the command `python master.py` in your terminal. This will initiate the scraping process and coordinate communication between the various workers.
 7. To run the worker script, use the command `python worker.py` in your terminal. This will start the worker process and enable it to receive and process tasks from the RabbitMQ message queue.
 
-**You can run as many workers as you need to scale the scraper. Once you have initiated the master script, you can run workers from any server and they will be able to communicate with the master process through the RabbitMQ message queue. This enables you to easily scale the scraper to handle larger workloads.**
+**You can run as many workers as you need to scale the scraper. Once you have initiated the master script, you can run workers from any server, and they will be able to communicate with the master process through the RabbitMQ message queue. This enables you to easily scale the scraper to handle larger workloads.**
