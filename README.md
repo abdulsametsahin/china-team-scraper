@@ -2,15 +2,23 @@
 
 This scraper was built by **China Team** for the Innoscripta Data Competition. Its purpose is to scrape data of Chinese companies from [https://www.gongsi.com.cn](https://gongsi.com.cn/).
 
-## How it works?
+## Table of contents
 
-Here is a detailed flow
+* [How it works](##how-it-works)
+  * [Search page generator](#search-page-generator)
+  * [Search page scraper](#search-page-scraper)
+  * [Company scraper](#company-scraper)
+  * [Company saver](#company-saver)
+* [Installation](#installation)
+
+
+## How it works? 🤔
 
 ![image.png](assets/flow.png)
 
 This scraper utilizes RabbitMQ for communication between the master and workers, enabling it to be highly scalable.
 
-The system is comprised of four different types of workers:
+The system comprises four different types of workers:
 
 * Search page generator
 * Search page scraper
