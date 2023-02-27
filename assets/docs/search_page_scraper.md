@@ -1,6 +1,6 @@
 # Search Page Scraper Explained
 
-This worker is running on master script. It is responsible for extrating company link from the search page and then passing it to the rabbitmq queue. There are 3 workers hard coded and you can change it [here](/../actions/scrape_search_results.py#L16).
+This worker is running on master script. It is responsible for extrating company link from the search page and then passing it to the rabbitmq queue. There are 3 workers hard coded and you can change it [here](actions/scrape_search_results.py#L16).
 
 ## How it works
 
