@@ -30,7 +30,8 @@ class ScrapeSearchResult:
         cookie_file = './storage/cookies.txt'
 
         if not os.path.exists(cookie_file):
-            print("Cookie file not found, waiting for 5 seconds")
+            print(
+                "[x] [ScrapeSearchResult] Cookie file does not exist. Waiting for 5 seconds")
             time.sleep(5)
 
         with open(cookie_file, 'r') as f:
@@ -69,7 +70,8 @@ class ScrapeSearchResult:
         queue_arguments = {'x-queue-mode': 'lazy'}
         consumer_channel.queue_declare(
             queue='search_page', durable=True, arguments=queue_arguments)
-        queue_arguments = {'x-queue-mode': 'lazy', 'x-max-length': 100000, 'x-overflow': 'reject-publish'}
+        queue_arguments = {'x-queue-mode': 'lazy',
+                           'x-max-length': 100000, 'x-overflow': 'reject-publish'}
         publisher_queue = publisher_channel.queue_declare(
             queue='company_link', durable=True, arguments=queue_arguments)
 
@@ -97,17 +99,20 @@ class ScrapeSearchResult:
             page_count = soup.select_one('.page-count')
             if page_count:
                 page_count = int(page_count.text.split(' ')[1].split(' ')[0])
-                if page_count > 200:
+                page_limit = 100 if gongsi_config['disable_login'] else 200
+                if page_count > page_limit:
                     if 'ci' in url:
-                        page_count = 200
+                        page_count = page_limit
                     else:
                         slug = body.decode('utf-8')
                         for new_url in [f"{slug}ci1", f"{slug}ci2"]:
                             # print(f"[x] [ScrapeSearchResult] New url is {new_url}")
                             publisher_channel.basic_publish(exchange='', routing_key='search_page',
-                                                            body=new_url.encode('utf-8'),
+                                                            body=new_url.encode(
+                                                                'utf-8'),
                                                             properties=pika.BasicProperties(delivery_mode=2))
-                        consumer_channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+                        consumer_channel.basic_ack(
+                            delivery_tag=method_frame.delivery_tag)
                         continue
 
             else:

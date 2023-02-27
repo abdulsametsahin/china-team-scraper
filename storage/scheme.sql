@@ -27,14 +27,24 @@ CREATE TABLE `annual_reports` (
   `business_status` varchar(50) DEFAULT NULL,
   `number_of_employees` int(11) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
+  `zip_code` varchar(50) DEFAULT NULL,
+  `address` varchar(150) DEFAULT NULL,
   `total_assets` double DEFAULT NULL,
+  `total_assets_currency` varchar(5) DEFAULT NULL,
   `total_owner_equity` double DEFAULT NULL,
+  `total_owner_equity_currency` varchar(5) DEFAULT NULL,
   `total_sales` double DEFAULT NULL,
+  `total_sales_currency` varchar(5) DEFAULT NULL,
   `total_profit` double DEFAULT NULL,
+  `total_profit_currency` varchar(5) DEFAULT NULL,
   `income_in_total` double DEFAULT NULL,
+  `income_in_total_currency` varchar(5) DEFAULT NULL,
   `net_profit` double DEFAULT NULL,
+  `net_profit_currency` varchar(5) DEFAULT NULL,
   `total_tax` double DEFAULT NULL,
+  `total_tax_currency` varchar(5) DEFAULT NULL,
   `total_liabilities` double DEFAULT NULL,
+  `total_liabilities_currency` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_annual_reports__company` (`company`),
   CONSTRAINT `fk_annual_reports__company` FOREIGN KEY (`company`) REFERENCES `companies` (`id`) ON DELETE CASCADE
@@ -75,6 +85,7 @@ CREATE TABLE `companies` (
   `website` varchar(100) DEFAULT NULL,
   `ceo` varchar(100) DEFAULT NULL,
   `registered_capital` double DEFAULT NULL,
+  `registered_capital_currency` varchar(5) DEFAULT NULL,
   `date_of_establishment` date DEFAULT NULL,
   `operating_status` varchar(20) DEFAULT NULL,
   `registration_number` varchar(20) DEFAULT NULL,
@@ -87,6 +98,7 @@ CREATE TABLE `companies` (
   `taxpayer_qualification` varchar(20) DEFAULT NULL,
   `approval_date` date DEFAULT NULL,
   `paid_in_capital` double DEFAULT NULL,
+  `paid_in_capital_currency` varchar(5) DEFAULT NULL,
   `staff_size` varchar(20) DEFAULT NULL,
   `insured_staff_size` varchar(20) DEFAULT NULL,
   `registration_authority` varchar(100) DEFAULT NULL,
@@ -105,23 +117,13 @@ CREATE TABLE `foreign_investments` (
   `name` varchar(100) DEFAULT NULL,
   `person` varchar(100) DEFAULT NULL,
   `registered_capital` double DEFAULT NULL,
+  `registered_capital_currency` varchar(5) DEFAULT NULL,
   `ratio` double DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_foreign_investments__company` (`company`),
   CONSTRAINT `fk_foreign_investments__company` FOREIGN KEY (`company`) REFERENCES `companies` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `main_staff`;
-CREATE TABLE `main_staff` (
-  `id` varchar(255) NOT NULL,
-  `company` varchar(255) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `position` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_main_staff__company` (`company`),
-  CONSTRAINT `fk_main_staff__company` FOREIGN KEY (`company`) REFERENCES `companies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `shareholders`;
@@ -131,13 +133,31 @@ CREATE TABLE `shareholders` (
   `name` varchar(100) NOT NULL,
   `ratio` double DEFAULT NULL,
   `capital` double DEFAULT NULL,
+  `capital_currency` varchar(5) DEFAULT NULL,
   `date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_shareholders__company` (`company`),
   CONSTRAINT `fk_shareholders__company` FOREIGN KEY (`company`) REFERENCES `companies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `positions`;
+CREATE TABLE `positions` (
+  `id` varchar(255) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `main_staff`;
+CREATE TABLE `main_staff` (
+  `id` varchar(255) NOT NULL,
+  `company` varchar(255) NOT NULL,
+  `position` varchar(255) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_main_staff__company` (`company`),
+  CONSTRAINT `fk_main_staff__company` FOREIGN KEY (`company`) REFERENCES `companies` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_main_staff__position` FOREIGN KEY (`position`) REFERENCES `positions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

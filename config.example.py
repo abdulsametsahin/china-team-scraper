@@ -20,9 +20,5 @@ gongsi_config = {
     'enterprise_type_count': 11,
     'phone_number': 'xxx',
     'password': 'xxx',
-}
-
-exchange_rates = {
-    'usd_to_yuan': 6.96,
-    'eur_to_yuan': 7.34,
+    'disable_login': True,
 }
