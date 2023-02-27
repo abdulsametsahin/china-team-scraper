@@ -30,3 +30,4 @@
 - enterprise_type_count: Number of enterprise types in the website
 - phone_number: Phone number to use for login
 - password: Password to use for login
+- disable_login: If you don't have an account, you can set this to true to disable login
