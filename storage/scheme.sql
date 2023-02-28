@@ -28,7 +28,7 @@ CREATE TABLE `annual_reports` (
   `number_of_employees` int(11) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `zip_code` varchar(50) DEFAULT NULL,
-  `address` varchar(150) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
   `total_assets` double DEFAULT NULL,
   `total_assets_currency` varchar(5) DEFAULT NULL,
   `total_owner_equity` double DEFAULT NULL,
@@ -54,7 +54,7 @@ DROP TABLE IF EXISTS `branches`;
 CREATE TABLE `branches` (
   `id` varchar(255) NOT NULL,
   `company` varchar(255) NOT NULL,
-  `name` varchar(100) NOT NULL,
+  `name` varchar(150) NOT NULL,
   `person` varchar(100) DEFAULT NULL,
   `date` date DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
@@ -103,7 +103,7 @@ CREATE TABLE `companies` (
   `insured_staff_size` varchar(20) DEFAULT NULL,
   `registration_authority` varchar(100) DEFAULT NULL,
   `english_name` varchar(200) DEFAULT NULL,
-  `registered_address` varchar(150) DEFAULT NULL,
+  `registered_address` varchar(255) DEFAULT NULL,
   `province` varchar(50) DEFAULT NULL,
   `business_scope` longtext,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
@@ -114,7 +114,7 @@ DROP TABLE IF EXISTS `foreign_investments`;
 CREATE TABLE `foreign_investments` (
   `id` varchar(255) NOT NULL,
   `company` varchar(255) NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
+  `name` varchar(150) DEFAULT NULL,
   `person` varchar(100) DEFAULT NULL,
   `registered_capital` double DEFAULT NULL,
   `registered_capital_currency` varchar(5) DEFAULT NULL,
@@ -130,7 +130,7 @@ DROP TABLE IF EXISTS `shareholders`;
 CREATE TABLE `shareholders` (
   `id` varchar(255) NOT NULL,
   `company` varchar(255) NOT NULL,
-  `name` varchar(100) NOT NULL,
+  `name` varchar(150) NOT NULL,
   `ratio` double DEFAULT NULL,
   `capital` double DEFAULT NULL,
   `capital_currency` varchar(5) DEFAULT NULL,
@@ -143,7 +143,7 @@ CREATE TABLE `shareholders` (
 DROP TABLE IF EXISTS `positions`;
 CREATE TABLE `positions` (
   `id` varchar(255) NOT NULL,
-  `name` varchar(100) NOT NULL,
+  `name` varchar(150) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
