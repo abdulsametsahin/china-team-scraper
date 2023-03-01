@@ -5,14 +5,14 @@ companies from [https://www.gongsi.com.cn](https://gongsi.com.cn/).
 
 ## Table of contents
 
-* [How it works](#how-it-works-)
-    * [Search page generator](#search-page-generator)
-    * [Search page scraper](#search-page-scraper)
-    * [Company scraper](#company-scraper)
-    * [Company saver](#company-saver)
-* [Installation](#installation)
-    * [Requirements](#requirements)
-    * [How to run?](#how-to-run)
+- [How it works](#how-it-works-)
+  - [Search page generator](#search-page-generator)
+  - [Search page scraper](#search-page-scraper)
+  - [Company scraper](#company-scraper)
+  - [Company saver](#company-saver)
+- [Installation](#installation)
+  - [Requirements](#requirements)
+  - [How to run?](#how-to-run)
 
 ## How it works? 🤔
 
@@ -22,10 +22,10 @@ This scraper utilizes RabbitMQ for communication between the master and workers,
 
 The system comprises four different types of workers:
 
-* Search page generator
-* Search page scraper
-* Company scraper
-* Company save worker.
+- Search page generator
+- Search page scraper
+- Company scraper
+- Company save worker.
 
 ## Search page generator
 
@@ -33,10 +33,8 @@ There is a pagination limit in place for this system. Non-registered users have 
 users have a limit of 200 pages.
 If a search result contains more than 200 pages, filters must be applied to generate search results with fewer pages.
 
-The search page generator is responsible for generating search pages and writing the links to the "**search\_page**"
+The search page generator is responsible for generating search pages and writing the links to the "**search_page**"
 queue, which is then scraped by the "Search page scraper" worker.
-
-[Read more](assets/docs/search_page_generator.md)
 
 ## Search page scraper
 
@@ -50,33 +48,26 @@ This is the only scraper which needs authentication. Therefore, there is another
 > there are more than 100,000 not scraped links in the queue and resume when the number decreases to a safe level. This
 > ensures that the scraper can continue to operate efficiently without overloading the RabbitMQ message queue.
 
-[Read more](assets/docs/search_page_scraper.md)
-
 ## Company scraper
 
 The scraper is designed to extract the following types of company data:
 
-* Basic company information, including the company's name, address, phone number, email, website, and other relevant
+- Basic company information, including the company's name, address, phone number, email, website, and other relevant
   details.
-* Detailed company information, including the company's industry, type, size, and other relevant details.
-* Branches of the company, including the branch name, person, date, and status.
-* Key people associated with the company, such as executives and board members.
-* Information about investors who have provided funding to the company.
-* Information about shareholders who own stock in the company.
-* Annual reports filed by the company which contain financial information and employee count.
+- Detailed company information, including the company's industry, type, size, and other relevant details.
+- Branches of the company, including the branch name, person, date, and status.
+- Key people associated with the company, such as executives and board members.
+- Information about investors who have provided funding to the company.
+- Information about shareholders who own stock in the company.
+- Annual reports filed by the company which contain financial information and employee count.
 
 > Note: Some companies do not have all of the above information. For example, some companies do not want to disclose
 > their financial information, so they do not have annual reports.
-
-[Read more](assets/docs/company_scraper.md)
 
 ## Company saver
 
 To prevent simultaneous queries, the scraper utilizes queues to store data in the database. If a company already exists
 in the database, it will be updated.
-
-[Read more](assets/docs/company_saver.md)
-
 
 ## Installation
 
@@ -85,8 +76,8 @@ the `docker-compose.yml` file provided in this repository.
 
 ## Requirements
 
-* Python3+ (Tested with 3.11)
-* Docker
+- Python3+ (Tested with 3.11)
+- Docker
 
 ## How to run?
 
