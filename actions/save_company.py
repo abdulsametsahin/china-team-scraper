@@ -1,6 +1,7 @@
 import json
 import sys
 import time
+from urllib.parse import urlparse
 
 import pika
 import pymysql.cursors
@@ -145,6 +146,12 @@ class SaveCompany:
 
         return None
 
+    def get_host(self, url):
+        if url is None:
+            return None
+
+        return urlparse(url).netloc
+
     def save(self):
         # update if exists, insert if not
         try:
@@ -163,7 +170,7 @@ class SaveCompany:
                 'title': self.company_data['basic_info']['title'],
                 'phone': phone,
                 'email': self.company_data['basic_info']['email'],
-                'website': self.company_data['basic_info']['website'][:99] if self.company_data['basic_info']['website'] is not None else None,
+                'website': self.get_host(self.company_data['basic_info']['website'][:99]) if self.company_data['basic_info']['website'] is not None else None,
                 'ceo': self.company_data['details']['法定代表人'],
                 'registered_capital': registered_capital[0] if registered_capital is not None else None,
                 'registered_capital_currency': registered_capital[1] if registered_capital is not None else None,
@@ -258,7 +265,7 @@ class SaveCompany:
                             'id': uuid.uuid4(),
                             'year': int(year),
                             'business_status': report['企业经营状态'],
-                            'number_of_employees': self.get_num(report['从业人数']),
+                            'number_of_employees': self.get_num(report['从业人数'].split(' ')[0]) if report['从业人数'] else None,
                             'email': report['电子邮箱'],
                             'zip_code': report['邮政编码'],
                             'address': report['企业通信地址'],
@@ -322,7 +329,8 @@ class SaveCompany:
 
                         ratio = float(shareholder['ratio'].replace(
                             '%', '')) if shareholder['ratio'] else None
-                        capital = self.get_money(shareholder['capital'])
+                        capital = self.get_money(shareholder['capital'].split(' ')[
+                                                 0]) if shareholder['capital'] else None
                         shareholder = {
                             'id': uuid.uuid4(),
                             'company': company['id'],
