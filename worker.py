@@ -29,9 +29,6 @@ def worker():
                                                             arguments=queue_arguments)
 
             consumer_channel.basic_qos(prefetch_count=1)
-
-            print(
-                f"[x] [ScrapeCompany] Waiting for messages in {consume_queue.method.queue}. To exit press CTRL+C")
             for method_frame, properties, body in consumer_channel.consume(consume_queue.method.queue):
                 url = f"https://www.gongsi.com.cn/detail/{body.decode('utf-8')}"
                 scraper = ScrapeCompany(url)
@@ -68,5 +65,6 @@ def run(workers):
 if __name__ == '__main__':
     # ask for the number of workers
     worker_count = int(input("How many workers do you want to run? "))
-    print("Starting processes")
+    print(
+        f"[x] [ScrapeCompany] Running {worker_count} workers. Press CTRL+C to stop.")
     run(worker_count)
