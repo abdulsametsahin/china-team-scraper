@@ -144,7 +144,7 @@ class ScrapeSearchResult:
                 response = self.get_with_cookie(f"{url}pg{current_page}")
                 try:
                     soup = BeautifulSoup(response.text, 'html.parser')
-                except Exception as e:
+                except:
                     break
 
             # print(f"[x] [ScrapeSearchResult] Task completed: {body}")

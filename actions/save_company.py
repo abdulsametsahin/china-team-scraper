@@ -232,6 +232,7 @@ class SaveCompany:
                                 return
                             else:
                                 print(f"[x] [SaveCompany] Error: {e}")
+                                return
 
                     else:
                         # print(f"[x] [SaveCompany] Updating {company['id']} in database")
