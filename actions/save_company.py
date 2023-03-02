@@ -152,7 +152,7 @@ class SaveCompany:
 
         return urlparse(url).netloc
 
-    def save(self):
+    def save(self, retry=0):
         # update if exists, insert if not
         try:
             phone = self.company_data['basic_info']['phone']
@@ -212,17 +212,27 @@ class SaveCompany:
                             INSERT INTO companies(id, title, phone, email, website, ceo, registered_capital, registered_capital_currency, date_of_establishment, operating_status, registration_number, social_credit_code, organization_code, tax_registration_number, company_type, operating_period, industry, taxpayer_qualification, approval_date, paid_in_capital,paid_in_capital_currency, staff_size, insured_staff_size, registration_authority, english_name, registered_address, province, business_scope, updated_at)
                             VALUES (%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s, %s, %s, %s,%s, %s,%s, %s, %s, %s, %s, %s)
                         """
-                        cursor.execute(query, (
-                            company['id'], company['title'], company['phone'], company['email'], company['website'],
-                            company['ceo'], company['registered_capital'], company['registered_capital_currency'], company['date_of_establishment'],
-                            company['operating_status'], company['registration_number'], company['social_credit_code'],
-                            company['organization_code'], company['tax_registration_number'],
-                            company['company_type'], company['operating_period'], company['industry'],
-                            company['taxpayer_qualification'], company['approval_date'], company[
-                                'paid_in_capital'], company['paid_in_capital_currency'],
-                            company['staff_size'], company['insured_staff_size'], company['registration_authority'],
-                            company['english_name'], company['registered_address'], company['province'],
-                            company['business_scope'], company['updated_at']))
+                        try:
+                            cursor.execute(query, (
+                                company['id'], company['title'], company['phone'], company['email'], company['website'],
+                                company['ceo'], company['registered_capital'], company[
+                                    'registered_capital_currency'], company['date_of_establishment'],
+                                company['operating_status'], company['registration_number'], company['social_credit_code'],
+                                company['organization_code'], company['tax_registration_number'],
+                                company['company_type'], company['operating_period'], company['industry'],
+                                company['taxpayer_qualification'], company['approval_date'], company[
+                                    'paid_in_capital'], company['paid_in_capital_currency'],
+                                company['staff_size'], company['insured_staff_size'], company['registration_authority'],
+                                company['english_name'], company['registered_address'], company['province'],
+                                company['business_scope'], company['updated_at']))
+                        except Exception as e:
+                            time.sleep(1)
+                            if retry < 2:
+                                self.save(retry=retry+1)
+                                return
+                            else:
+                                print(f"[x] [SaveCompany] Error: {e}")
+
                     else:
                         # print(f"[x] [SaveCompany] Updating {company['id']} in database")
                         query = """
