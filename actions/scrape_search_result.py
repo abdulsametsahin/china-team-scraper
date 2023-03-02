@@ -142,7 +142,10 @@ class ScrapeSearchResult:
 
                 current_page += 1
                 response = self.get_with_cookie(f"{url}pg{current_page}")
-                soup = BeautifulSoup(response.text, 'html.parser')
+                try:
+                    soup = BeautifulSoup(response.text, 'html.parser')
+                except Exception as e:
+                    break
 
             # print(f"[x] [ScrapeSearchResult] Task completed: {body}")
             consumer_channel.basic_ack(delivery_tag=method_frame.delivery_tag)
