@@ -139,11 +139,13 @@ class ScrapeSearchResult:
                         consumer_channel.basic_nack(
                             delivery_tag=method_frame.delivery_tag)
                         return
-
-                current_page += 1
-                response = self.get_with_cookie(f"{url}pg{current_page}")
                 try:
-                    soup = BeautifulSoup(response.text, 'html.parser')
+                    current_page += 1
+                    response = self.get_with_cookie(f"{url}pg{current_page}")
+                    if response.status_code == 200 and response.text:
+                        soup = BeautifulSoup(response.text, 'html.parser')
+                    else:
+                        break
                 except:
                     break
 
